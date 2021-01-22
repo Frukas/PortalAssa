@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package mailPB;
+
+option go_package = "mailPB";
+
+message Mails {
+    repeated MailSimple mails = 1;
+}
+
+message MailSimple {
+    string exchangeID = 1;
+    string receivedDateTime = 2;
+    string subject = 3;
+    string bodyPreview = 4;
+    string webLink = 5;
+    string body_contentType = 6;
+    string body_content = 7;
+    string from_address = 8;
+    string parentFolderId = 9;
+    string taskName = 10;
+}
+
+
+message MailsRequest{
+    Mails mails = 1;
+}
+
+message MailsResponse{
+    string result = 1;
+}
+
+service MailsService{
+    //Unary
+    rpc PostMails(MailsRequest) returns (MailsResponse);
+}
+

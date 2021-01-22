@@ -1,0 +1,83 @@
+//full proto3 of the mail value. Just for reference.
+
+message "body" {
+  required string @odata.type = 0
+  required string @odata.etag = 1
+  required string createdDateTime = 2
+  required string lastModifiedDateTime = 3
+  required string changeKey = 4
+  repeated undefined categories = 5
+  required string receivedDateTime = 6
+  required string sentDateTime = 7
+  required bool hasAttachments = 8
+  required string internetMessageId = 9
+  required string subject = 10
+  required string bodyPreview = 11
+  required string importance = 12
+  required string parentFolderId = 13
+  required string conversationId = 14
+  required string conversationIndex = 15
+
+  message ISDELIVERYRECEIPTREQUESTED {
+  }
+
+  required ISDELIVERYRECEIPTREQUESTED isDeliveryReceiptRequested = 16
+  required bool isReadReceiptRequested = 17
+  required bool isRead = 18
+  required bool isDraft = 19
+  required string webLink = 20
+  required string inferenceClassification = 21
+  required string id = 22
+
+  message BODY {
+    required string contentType = 0
+    required string content = 1
+  }
+
+  required BODY body = 23
+
+  message SENDER {
+
+    message EMAILADDRESS {
+      required string name = 0
+      required string address = 1
+    }
+
+    required EMAILADDRESS emailAddress = 0
+  }
+
+  required SENDER sender = 24
+
+  message FROM {
+
+    message EMAILADDRESS {
+      required string name = 0
+      required string address = 1
+    }
+
+    required EMAILADDRESS emailAddress = 0
+  }
+
+  required FROM from = 25
+
+  message TORECIPIENTS {
+
+    message EMAILADDRESS {
+      required string name = 0
+      required string address = 1
+    }
+
+    required EMAILADDRESS emailAddress = 0
+  }
+
+  repeated TORECIPIENTS toRecipients = 26
+  repeated undefined ccRecipients = 27
+  repeated undefined bccRecipients = 28
+  repeated undefined replyTo = 29
+
+  message FLAG {
+    required string flagStatus = 0
+  }
+
+  required FLAG flag = 30
+}
