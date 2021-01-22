@@ -8,6 +8,6 @@ MailWatcher - Verificação de recebimento de novos email em uma conta de email,
 
 WebConnector - Responsável por gerenciar os email, gerar chamados e se comunicar com o frontend.
 
-loginpage - Um sistema frontend simples para conectar os sistema Microsoft.
+loginpage - Um sistema frontend simples para conectar ao sistema Microsoft.
 
 
