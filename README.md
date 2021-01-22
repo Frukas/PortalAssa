@@ -6,7 +6,7 @@ Os arquivos tem os seguintes propositos:
 
 MailWatcher - Verificação de recebimento de novos email em uma conta de email, tratando e enviando os dados para outros serviço.
 
-WebConnector - Responsável por gerenciar os email, gerar chamados e se comumincar com o frontend.
+WebConnector - Responsável por gerenciar os email, gerar chamados e se comunicar com o frontend.
 
 loginpage - Um sistema frontend simples para conectar os sistema Microsoft.
 
