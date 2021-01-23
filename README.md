@@ -11,4 +11,5 @@ WebConnector - Responsável por gerenciar os email, gerar chamados e se comunica
 
 loginpage - Um sistema frontend simples para conectar ao sistema Microsoft.
 
+Frontend - Responsável por listar as tasks. Ainda simples com poucas implementações.
 
