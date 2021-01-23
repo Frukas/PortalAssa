@@ -19,6 +19,7 @@ message MailSimple {
     string from_address = 8;
     string parentFolderId = 9;
     string taskName = 10;
+    string folderID = 11;
 }
 
 

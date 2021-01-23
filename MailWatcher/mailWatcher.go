@@ -1,7 +1,6 @@
 package main
 
 import (
-	context "context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -98,25 +97,29 @@ func (f *FolderInfo) DeltaMessageWatcher(urlMessage string, c MailsServiceClient
 
 	//fmt.Println("next address: ", deltaNextMessage.OdataDeltaLink)
 	for _, value := range deltaNextMessage.Value {
-		mails.Mails = append(mails.Mails, convertToProto3(value))
+		mails.Mails = append(mails.Mails, f.convertToProto3(value))
+		fmt.Println(mails.Mails[0].TaskName)
 		fmt.Println(value.Subject)
 	}
 
-	mreq := &MailsRequest{
-		Mails: &mails,
-	}
-	if mails.Mails != nil {
+	// mreq := &MailsRequest{
+	// 	Mails: &mails,
+	// }
+	// if mails.Mails != nil {
 
-		resp, _ := c.PostMails(context.Background(), mreq)
-		fmt.Println("Result of the calling: ", resp.GetResult())
+	// 	_, err := c.PostMails(context.Background(), mreq)
+	// 	if err != nil {
+	// 		log.Fatal("Erro de envio gRPC:", err)
+	// 	}
+	// 	//fmt.Println("Result of the calling: ", resp.GetResult())
 
-	}
+	// }
 
 	f.DeltaMessageWatcher(deltaNextMessage.OdataDeltaLink, c)
 
 }
 
-func convertToProto3(msg Value) *MailSimple {
+func (f *FolderInfo) convertToProto3(msg Value) *MailSimple {
 	sm := &MailSimple{
 		ExchangeID:       msg.ConversationID,
 		ReceivedDateTime: msg.ReceivedDateTime.String(),
@@ -128,6 +131,8 @@ func convertToProto3(msg Value) *MailSimple {
 		FromAddress:      msg.From.EmailAddress.Address,
 		ParentFolderId:   msg.ParentFolderID,
 		TaskName:         "",
+		FolderID:         f.FolderID,
 	}
-	return sm
+
+	return getTaskName(sm)
 }

@@ -71,7 +71,7 @@ func folderInfosFromDB() {
 // }
 
 func getNewMailsServiceClient() MailsServiceClient {
-	fmt.Println("Hello I´m a client")
+	//fmt.Println("Hello I´m a client")
 
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
@@ -95,8 +95,8 @@ func ControllerStart(code string) {
 	folderInfosFromDB()
 
 	for _, folder := range folderInfos {
-		fmt.Println(folder.Name)
-		fmt.Println(folder.FolderAddress)
+		//fmt.Println(folder.Name)
+		//fmt.Println(folder.FolderAddress)
 		go folder.InitialDeltaMailrequest(folder.FolderAddress, c)
 	}
 }
