@@ -35,9 +35,10 @@ func (s *server) PostMails(ctx context.Context, req *MailsRequest) (*MailsRespon
 
 	for _, mail := range req.GetMails().GetMails() {
 		fmt.Println(mail.GetSubject())
+		fmt.Println(mail.GetTaskName())
 		message := Message{
 			Type: 1,
-			Body: mail.GetSubject(),
+			Body: mail.GetTaskName(),
 		}
 
 		pool.Broadcast <- message

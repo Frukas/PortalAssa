@@ -1,6 +1,7 @@
 package main
 
 import (
+	context "context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -102,18 +103,18 @@ func (f *FolderInfo) DeltaMessageWatcher(urlMessage string, c MailsServiceClient
 		fmt.Println(value.Subject)
 	}
 
-	// mreq := &MailsRequest{
-	// 	Mails: &mails,
-	// }
-	// if mails.Mails != nil {
+	mreq := &MailsRequest{
+		Mails: &mails,
+	}
+	if mails.Mails != nil {
 
-	// 	_, err := c.PostMails(context.Background(), mreq)
-	// 	if err != nil {
-	// 		log.Fatal("Erro de envio gRPC:", err)
-	// 	}
-	// 	//fmt.Println("Result of the calling: ", resp.GetResult())
+		resp, err := c.PostMails(context.Background(), mreq)
+		if err != nil {
+			log.Fatal("Erro de envio gRPC:", err)
+		}
+		fmt.Println("Result of the calling: ", resp.GetResult())
 
-	// }
+	}
 
 	f.DeltaMessageWatcher(deltaNextMessage.OdataDeltaLink, c)
 
