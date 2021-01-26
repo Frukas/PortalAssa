@@ -40,6 +40,12 @@ func (s *server) PostMails(ctx context.Context, req *MailsRequest) (*MailsRespon
 			Type: 1,
 			Body: mail.GetTaskName(),
 		}
+		saveMailintoDB(mail)
+		teste := getFolderListElement()
+
+		for _, tes := range teste {
+			fmt.Println(tes)
+		}
 
 		pool.Broadcast <- message
 
