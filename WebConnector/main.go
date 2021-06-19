@@ -34,20 +34,17 @@ func gRPCInit() {
 func (s *server) PostMails(ctx context.Context, req *MailsRequest) (*MailsResponse, error) {
 
 	for _, mail := range req.GetMails().GetMails() {
-		fmt.Println(mail.GetSubject())
-		fmt.Println(mail.GetTaskName())
-		message := Message{
-			Type: 1,
-			Body: mail.GetTaskName(),
-		}
+
+		var messages messageHandler
+
 		saveMailintoDB(mail)
-		teste := getFolderListElement()
+		folderElments := getFolderListElement()
 
-		for _, tes := range teste {
-			fmt.Println(tes)
+		for _, message := range folderElments {
+			messages.addTaskEntryToArray(message)
 		}
 
-		pool.Broadcast <- message
+		pool.Broadcast <- messages.Messages
 
 	}
 	res := &MailsResponse{
@@ -76,10 +73,13 @@ func webConnectorInit() {
 
 	go pool.Start()
 
+	fmt.Println("Started the server on the port 9090")
+
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serverWS(pool, w, r)
 	})
 	http.ListenAndServe(":9090", nil)
+
 }
 
 func main() {

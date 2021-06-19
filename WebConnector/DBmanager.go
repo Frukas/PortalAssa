@@ -22,6 +22,18 @@ type TaskEntry struct {
 	ActualTaskTime int                `bson:"ActualTaskTime,omitempty"`
 	ReportTaskTime int                `bson:"ReportTaskTime,omitempty"`
 	Status         string             `bson:"Status,omitempty"`
+	Abreviation    string             `bson:"Abreviation,omitempty"`
+}
+
+//FolderStruct is the struct of the collection "Folder" in the DB
+type FolderStruct struct {
+	ID             primitive.ObjectID `bson:"_id, omitempty"`
+	Client         string             `bson:"Client, omitempty"`
+	FolderName     string             `bson:"FolderName, omitempty"`
+	ParentFolderID string             `bson:"ParentFolderID, omitempty"`
+	FolderID       string             `bson:"FolderID, omitempty"`
+	Abreviation    string             `bson:"Abreviation, omitempty"`
+	Color          string             `bson:"Color, omitempty"`
 }
 
 func getDBClient() *mongo.Client {
@@ -47,17 +59,24 @@ func getTaskArchiveCollection() *mongo.Collection {
 	return collection
 }
 
+func getFoldersCollection() *mongo.Collection {
+	collection := getDBClient().Database("PortalAssa").Collection("Folders")
+
+	return collection
+}
+
 func saveMailintoDB(mail *MailSimple) {
 
 	entry := bson.D{
 		primitive.E{Key: "MailInfo", Value: mail},
 		primitive.E{Key: "StartTime", Value: time.Time{}},
 		primitive.E{Key: "EndTime", Value: time.Time{}},
-		primitive.E{Key: "Operator", Value: "na"},
-		primitive.E{Key: "DoubleChecker", Value: "na"},
+		primitive.E{Key: "Operator", Value: "Operator"},
+		primitive.E{Key: "DoubleChecker", Value: "DoubleChecker"},
 		primitive.E{Key: "ActualTaskTime", Value: 0},
 		primitive.E{Key: "ReportTaskTime", Value: 0},
-		primitive.E{Key: "Status", Value: "na"},
+		primitive.E{Key: "Status", Value: "Open"},
+		primitive.E{Key: "Abreviation", Value: "na"},
 	}
 
 	if _, err := getTaskListCollection().InsertOne(context.Background(), entry); err != nil {
@@ -79,5 +98,25 @@ func getFolderListElement() []TaskEntry {
 	if err = res.All(context.Background(), &list); err != nil {
 		log.Fatalln("Failed to get the task lists: ", err)
 	}
+	return list
+}
+
+func getAbreviationFromFolder(Folder string) []FolderStruct {
+
+	var list []FolderStruct
+
+	filter := bson.D{
+		primitive.E{Key: "FolderID", Value: Folder},
+	}
+
+	res, err := getFoldersCollection().Find(context.Background(), filter)
+	if err != nil {
+		log.Fatalf("Error searching for the abreviation: %v", err)
+	}
+
+	if err = res.All(context.Background(), &list); err != nil {
+		log.Fatalln("Failed to get the task lists: ", err)
+	}
+
 	return list
 }
