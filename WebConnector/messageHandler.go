@@ -19,8 +19,9 @@ type messageHandler struct {
 
 func (m *messageHandler) addTaskEntryToArray(task TaskEntry) {
 	newMessage := Message{
-		ID:            task.ID,
-		Abreviation:   task.MailInfo.FolderID,
+		ID: task.ID,
+		//Abreviation:   task.MailInfo.FolderID,
+		Abreviation:   task.Abreviation,
 		Operator:      task.Operator,
 		DoubleChecker: task.DoubleChecker,
 		TaskName:      task.MailInfo.TaskName,

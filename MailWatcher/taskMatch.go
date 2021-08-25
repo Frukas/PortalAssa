@@ -11,13 +11,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+//struct for find the foldeID.  
 type taskMatchDB struct {
-	folderID string `bson:"folderID"`
-	TaskName string `bson:"TaskName"`
-	Subject  string `bson:"Subject"`
-	Body     string `bson:"Body"`
-	Sender   string `bson:"Sender"`
-	Priority int    `bson:"Priority"`
+	folderID string `bson:"folderID"`// to identify the folder the message was received
+	TaskName string `bson:"TaskName"`// the represented Task 
+	Subject  string `bson:"Subject"`// if the search pattern it by the subject of the message. If not should be inputed "na".
+	Body     string `bson:"Body"`// if the search pattern it by the subject of the body. If not should be inputed "na".
+	Sender   string `bson:"Sender"`// if the search pattern it by the sender of the body. If not should be inputed "na".
+	Priority int    `bson:"Priority"`//the order of the check.
 }
 
 func getTaskName(mailInfo *MailSimple) *MailSimple {

@@ -2,7 +2,9 @@ package main
 
 import (
 	context "context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -78,6 +80,29 @@ func webConnectorInit() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serverWS(pool, w, r)
 	})
+
+	//return the initial task list
+	http.HandleFunc("/openTaskList", func(w http.ResponseWriter, r *http.Request) {
+
+		folderElments := getFolderListElement()
+
+		var messages messageHandler
+
+		for _, message := range folderElments {
+			messages.addTaskEntryToArray(message)
+		}
+
+		if err := json.NewEncoder(w).Encode(messages); err != nil {
+			log.Println("Error sending the initial task list: ", err)
+		}
+	})
+
+	http.HandleFunc("/updateTask", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		reqBody, _ := ioutil.ReadAll(r.Body)
+		fmt.Println(string(reqBody))
+	})
+
 	http.ListenAndServe(":9090", nil)
 
 }

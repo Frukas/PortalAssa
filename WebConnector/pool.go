@@ -31,7 +31,6 @@ func (pool *Pool) Start() {
 		select {
 		case client := <-pool.Register:
 			pool.Clients[client] = true
-			//go pool.ListeningMessageAndStartPing(client)
 			client.Start()
 			fmt.Println("Size of Connection Pool: ", len(pool.Clients))
 
@@ -41,7 +40,10 @@ func (pool *Pool) Start() {
 
 		case message := <-pool.Broadcast:
 
-			//fmt.Println("Sending message to all clients in Pool")
+			for _, msg := range message {
+				fmt.Println(msg)
+			}
+
 			for client := range pool.Clients {
 
 				if err := client.Conn.WriteJSON(message); err != nil {
@@ -52,59 +54,3 @@ func (pool *Pool) Start() {
 		}
 	}
 }
-
-// func (pool *Pool) Ping(client *Client) {
-
-// 	ticker := time.NewTicker(35 * time.Second)
-// 	done := make(chan bool)
-// 	fmt.Println("Chegou aqui", client.ID)
-
-// 	for {
-// 		select {
-// 		case <-done:
-// 			return
-
-// 		case <-ticker.C:
-// 			if err := client.Conn.WriteMessage(1, []byte("Ping")); err != nil {
-// 				fmt.Println("Error sending  ping message: ", err)
-// 				return
-// 			}
-// 			fmt.Println("Pingou")
-// 		}
-// 	}
-// }
-
-// func (pool *Pool) ListeningMessageAndStartPing(client *Client) {
-
-// 	messages := list.New()
-
-// 	//starts the ping every x seconds
-// 	go pool.Ping(client)
-
-// 	//Starts a go routine that start to listing to the message and add it to a pool called messages
-// 	go func(client *Client, messages *list.List) {
-// 		for {
-// 			_, message, err := client.Conn.ReadMessage()
-// 			if err != nil {
-// 				log.Fatal("Error listing Message on client: ", client.ID, "Error message: ", err)
-// 			}
-// 			if string(message) == "HeartBit Ok" {
-// 				fmt.Println(string(message))
-
-// 			} else {
-// 				fmt.Println(string(message), "Json")
-// 			}
-// 			messages.PushBack(message)
-// 			go pool.PopFirstElementPool(messages)
-// 		}
-// 	}(client, messages)
-// }
-
-// func (pool *Pool) PopFirstElementPool(list *list.List) {
-
-// 	if list.Front() != nil {
-// 		fmt.Println(list.Front().Value, "Popping out")
-// 		fmt.Println("Number of element:", list.Len())
-// 		list.Remove(list.Front())
-// 	}
-// }

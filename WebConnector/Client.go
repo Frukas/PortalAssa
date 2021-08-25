@@ -3,7 +3,6 @@ package main
 import (
 	"container/list"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -18,6 +17,8 @@ type Client struct {
 }
 
 func (client *Client) Start() {
+
+	go client.sendInitialTaskList()
 	go client.ping()
 	go client.listeningMessage()
 	go client.responsePoolClear()
@@ -39,7 +40,6 @@ func (client *Client) ping() {
 				fmt.Println("Error sending  ping message: ", err)
 				return
 			}
-			fmt.Println("Pingou")
 		}
 	}
 }
@@ -53,9 +53,10 @@ func (client *Client) listeningMessage() {
 		for {
 			_, message, err := client.Conn.ReadMessage()
 			if err != nil {
-				log.Fatal("Error listing Message on client: ", client.ID, "Error message: ", err)
-			}
-			if string(message) == "HeartBit Ok" {
+				fmt.Println("Error listing Message on client: ", client.ID, "Error message: ", err)
+				defer client.Conn.Close()
+				return
+			} else if string(message) == "HeartBit Ok" {
 				fmt.Println(string(message))
 
 			} else {
@@ -76,4 +77,16 @@ func (client *Client) responsePoolClear() {
 			client.Response.Remove(e)
 		}
 	}
+}
+
+func (client *Client) sendInitialTaskList() {
+
+	var messages messageHandler
+	folderElments := getFolderListElement()
+
+	for _, message := range folderElments {
+		messages.addTaskEntryToArray(message)
+	}
+
+	pool.Broadcast <- messages.Messages
 }

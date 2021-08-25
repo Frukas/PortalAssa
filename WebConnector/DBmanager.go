@@ -80,7 +80,7 @@ func saveMailintoDB(mail *MailSimple) {
 	}
 
 	if _, err := getTaskListCollection().InsertOne(context.Background(), entry); err != nil {
-		log.Fatalln("Fail to insert mail registry in the DB: ", err)
+		log.Println("Fail to insert mail registry in the DB: ", err)
 	}
 }
 
@@ -92,11 +92,11 @@ func getFolderListElement() []TaskEntry {
 
 	res, err := getTaskListCollection().Find(context.Background(), filter)
 	if err != nil {
-		log.Fatalf("erro na pesquisa: %v", err)
+		log.Println("erro na pesquisa: ", err)
 	}
 
 	if err = res.All(context.Background(), &list); err != nil {
-		log.Fatalln("Failed to get the task lists: ", err)
+		log.Println("Failed to get the task lists: ", err)
 	}
 	return list
 }
@@ -111,11 +111,11 @@ func getAbreviationFromFolder(Folder string) []FolderStruct {
 
 	res, err := getFoldersCollection().Find(context.Background(), filter)
 	if err != nil {
-		log.Fatalf("Error searching for the abreviation: %v", err)
+		log.Println("Error searching for the abreviation: ", err)
 	}
 
 	if err = res.All(context.Background(), &list); err != nil {
-		log.Fatalln("Failed to get the task lists: ", err)
+		log.Println("Failed to get the task lists: ", err)
 	}
 
 	return list
